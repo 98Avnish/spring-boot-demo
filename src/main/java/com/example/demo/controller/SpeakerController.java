@@ -2,11 +2,15 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Speaker;
 import com.example.demo.service.SpeakerService;
+import com.example.demo.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,6 +20,9 @@ public class SpeakerController {
 
     @Autowired
     private SpeakerService speakerService;
+
+    @Autowired
+    private Utils utils;
 
     @GetMapping
     public List<Speaker> getSpeakers() {
@@ -34,7 +41,12 @@ public class SpeakerController {
     }
 
     @PostMapping
-    public ResponseEntity<Speaker> addSpeakers(@RequestBody Speaker speaker) {
+    public ResponseEntity<Speaker> addSpeakers(@Valid @RequestBody Speaker speaker,
+                                               BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            utils.logBindingError(bindingResult);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         log.info("Adding Speaker: {}", speaker);
         speakerService.addSpeaker(speaker);
         return speakerService.getSpeaker(speaker.getId()).map(sp ->
@@ -46,7 +58,12 @@ public class SpeakerController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Speaker> updateSpeaker(@PathVariable("id") Long id,
-                                                 @RequestBody Speaker speaker) {
+                                                 @Valid @RequestBody Speaker speaker,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            utils.logBindingError(bindingResult);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         log.info("Updating Speaker: {}", id);
         return speakerService.getSpeaker(id).map(s -> {
             Speaker updatedSpeaker = speakerService.updateSpeaker(speaker);

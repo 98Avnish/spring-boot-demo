@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 @Entity(name = "speakers")
 @Data
@@ -16,7 +17,11 @@ public class Speaker {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotBlank
     private String firstName;
+
+    @NotBlank
     private String lastName;
 
     public Speaker(String firstName, String lastName) {
