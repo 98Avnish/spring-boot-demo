@@ -12,4 +12,8 @@ public interface SessionService {
     List<Session> getAllSessions();
 
     Session addSession(Session session);
+
+    Session updateSession(Session session);
+
+    void deleteSession(Long id);
 }

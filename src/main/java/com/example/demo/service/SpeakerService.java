@@ -12,4 +12,8 @@ public interface SpeakerService {
     List<Speaker> getAllSpeakers();
 
     Speaker addSpeaker(Speaker speaker);
+
+    Speaker updateSpeaker(Speaker speaker);
+
+    void deleteSpeaker(Long id);
 }

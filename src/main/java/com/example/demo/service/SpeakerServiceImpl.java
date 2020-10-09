@@ -39,4 +39,14 @@ public class SpeakerServiceImpl implements SpeakerService {
     public Speaker addSpeaker(Speaker speaker) {
         return repo.saveAndFlush(speaker);
     }
+
+    @Override
+    public Speaker updateSpeaker(Speaker speaker) {
+        return repo.saveAndFlush(speaker);
+    }
+
+    @Override
+    public void deleteSpeaker(Long id) {
+        repo.deleteById(id);
+    }
 }

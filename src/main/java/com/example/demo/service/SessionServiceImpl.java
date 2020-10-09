@@ -39,4 +39,15 @@ public class SessionServiceImpl implements SessionService {
     public Session addSession(Session session) {
         return repo.saveAndFlush(session);
     }
+
+    @Override
+    public Session updateSession(Session session) {
+        return repo.saveAndFlush(session);
+    }
+
+    @Override
+    public void deleteSession(Long id) {
+        repo.deleteById(id);
+    }
+
 }
