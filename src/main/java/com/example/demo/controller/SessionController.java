@@ -26,18 +26,17 @@ public class SessionController {
 
     @GetMapping
     public List<Session> getSessions() {
-        log.info("Get Sessions");
         return sessionService.getAllSessions();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Session> getSpeaker(@PathVariable("id") Long id) {
-        log.info("Get Session {}", id);
-        return sessionService.getSession(id).map(session ->
-                ResponseEntity
-                        .ok()
-                        .body(session)
-        ).orElse(ResponseEntity.notFound().build());
+        return sessionService.getSession(id).map(session -> {
+            log.info("Found Session :{}", session);
+            return ResponseEntity
+                    .ok()
+                    .body(session);
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -47,7 +46,6 @@ public class SessionController {
             utils.logBindingError(bindingResult);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        log.info("Adding Session: {}", session);
         sessionService.addSession(session);
         return sessionService.getSession(session.getId()).map(s ->
                 ResponseEntity
@@ -64,7 +62,6 @@ public class SessionController {
             utils.logBindingError(bindingResult);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        log.info("Updating Session: {}", session);
         return sessionService.getSession(id).map(s -> {
             Session updatedSession = sessionService.updateSession(session);
             return ResponseEntity
@@ -75,7 +72,6 @@ public class SessionController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteSession(@PathVariable("id") Long id) {
-        log.info("Delete Session {}", id);
         return sessionService.getSession(id).map(s -> {
             sessionService.deleteSession(id);
             return ResponseEntity.ok(true);

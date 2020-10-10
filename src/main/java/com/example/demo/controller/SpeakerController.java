@@ -26,18 +26,17 @@ public class SpeakerController {
 
     @GetMapping
     public List<Speaker> getSpeakers() {
-        log.info("Get Speakers");
         return speakerService.getAllSpeakers();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Speaker> getSpeaker(@PathVariable("id") Long id) {
-        log.info("Get Speaker {}", id);
-        return speakerService.getSpeaker(id).map(speaker ->
-                ResponseEntity
-                        .ok()
-                        .body(speaker)
-        ).orElse(ResponseEntity.notFound().build());
+        return speakerService.getSpeaker(id).map(speaker -> {
+            log.info("Found Speaker :{}", speaker);
+            return ResponseEntity
+                    .ok()
+                    .body(speaker);
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -47,7 +46,6 @@ public class SpeakerController {
             utils.logBindingError(bindingResult);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        log.info("Adding Speaker: {}", speaker);
         speakerService.addSpeaker(speaker);
         return speakerService.getSpeaker(speaker.getId()).map(sp ->
                 ResponseEntity
@@ -64,7 +62,6 @@ public class SpeakerController {
             utils.logBindingError(bindingResult);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        log.info("Updating Speaker: {}", id);
         return speakerService.getSpeaker(id).map(s -> {
             Speaker updatedSpeaker = speakerService.updateSpeaker(speaker);
             return ResponseEntity
@@ -75,7 +72,6 @@ public class SpeakerController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteSpeaker(@PathVariable("id") Long id) {
-        log.info("Delete Speaker {}", id);
         return speakerService.getSpeaker(id).map(s -> {
             speakerService.deleteSpeaker(id);
             return ResponseEntity.ok(true);
