@@ -30,7 +30,7 @@ public class SessionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Session> getSpeaker(@PathVariable("id") Long id) {
+    public ResponseEntity<Session> getSession(@PathVariable("id") Long id) {
         return sessionService.getSession(id).map(session -> {
             log.info("Found Session :{}", session);
             return ResponseEntity
@@ -40,14 +40,14 @@ public class SessionController {
     }
 
     @PostMapping
-    public ResponseEntity<Session> addSpeaker(@Valid @RequestBody Session session,
+    public ResponseEntity<Session> addSession(@Valid @RequestBody Session session,
                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             utils.logBindingError(bindingResult);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(session);
         }
-        sessionService.addSession(session);
-        return sessionService.getSession(session.getId()).map(s ->
+        Session savedSession = sessionService.addSession(session);
+        return sessionService.getSession(savedSession.getId()).map(s ->
                 ResponseEntity
                         .ok()
                         .body(s)
@@ -55,12 +55,12 @@ public class SessionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Session> updateSpeaker(@PathVariable("id") Long id,
+    public ResponseEntity<Session> updateSession(@PathVariable("id") Long id,
                                                  @Valid @RequestBody Session session,
                                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             utils.logBindingError(bindingResult);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(session);
         }
         return sessionService.getSession(id).map(s -> {
             Session updatedSession = sessionService.updateSession(session);
