@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "custom")
 public class PropConfig {
 
-    private String propertyOne;
-    private String propertyTwo;
+    private String propertyName;
     private Boolean flag;
 }

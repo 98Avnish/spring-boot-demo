@@ -15,9 +15,17 @@ public class GreetingController {
     @Inject
     private PropConfig props;
 
-    @GetMapping("/greeting")
+    @GetMapping
     public String greeting() {
-        return "Value :" +
-                (Boolean.TRUE.equals(props.getFlag()) ? props.getPropertyOne() : props.getPropertyTwo());
+        return "<h1>Hello!!</h1>" +
+                "<a href=/login>Login</a>" +
+                "<br>" +
+                "<a href=/perform_logout>Logout</a>";
+    }
+
+    @GetMapping("/value")
+    public String value() {
+        return "Value :" + (Boolean.TRUE.equals(props.getFlag())
+                ? props.getPropertyName() : "Dummy");
     }
 }

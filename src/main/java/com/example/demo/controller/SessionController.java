@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.model.Session;
 import com.example.demo.service.SessionService;
 import com.example.demo.utils.Utils;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("conferenceData/sessions")
-@Slf4j
 public class SessionController {
 
     @Autowired
@@ -31,12 +29,11 @@ public class SessionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Session> getSession(@PathVariable("id") Long id) {
-        return sessionService.getSession(id).map(session -> {
-            log.info("Found Session :{}", session);
-            return ResponseEntity
-                    .ok()
-                    .body(session);
-        }).orElse(ResponseEntity.notFound().build());
+        return sessionService.getSession(id).map(session ->
+                ResponseEntity
+                        .ok()
+                        .body(session)
+        ).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
