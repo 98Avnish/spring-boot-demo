@@ -3,25 +3,26 @@ package com.example.demo.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-@Entity(name = "speakers")
+@Entity
+@Table(name = "SPEAKERS")
 @Data
 @NoArgsConstructor
 public class Speaker {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "SPEAKER_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
+    @Column(name = "FIRST_NAME")
     private String firstName;
 
     @NotBlank
+    @Column(name = "LAST_NAME")
     private String lastName;
 
     public Speaker(String firstName, String lastName) {

@@ -17,10 +17,11 @@ public class GreetingController {
 
     @GetMapping
     public String greeting() {
-        return "<h1>Hello!!</h1>" +
-                "<a href=/login>Login</a>" +
-                "<br>" +
-                "<a href=/perform_logout>Logout</a>";
+        return new StringBuilder("<h1>Hello!!</h1>")
+                .append("<a href=/login>Login</a>")
+                .append("<br><br>")
+                .append("<a href=/perform_logout>Logout</a>")
+                .toString();
     }
 
     @GetMapping("/value")
