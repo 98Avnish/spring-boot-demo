@@ -16,11 +16,14 @@ import java.util.List;
 @RequestMapping("conferenceData/sessions")
 public class SessionController {
 
-    @Autowired
-    private SessionService sessionService;
+    private final SessionService sessionService;
 
-    @Autowired
-    private Utils utils;
+    private final Utils utils;
+
+    public SessionController(SessionService sessionService, Utils utils) {
+        this.sessionService = sessionService;
+        this.utils = utils;
+    }
 
     @GetMapping
     public List<Session> getSessions() {

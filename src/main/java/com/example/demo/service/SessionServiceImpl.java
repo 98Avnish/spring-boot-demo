@@ -16,8 +16,13 @@ import java.util.Optional;
 @Slf4j
 public class SessionServiceImpl implements SessionService {
 
-    @Autowired
     private SessionRepo repo;
+
+    @Autowired
+    public SessionServiceImpl(SessionRepo sessionRepo) {
+        log.info("SessionServiceImpl constructor");
+        this.repo = sessionRepo;
+    }
 
     @PostConstruct
     private void addData() {

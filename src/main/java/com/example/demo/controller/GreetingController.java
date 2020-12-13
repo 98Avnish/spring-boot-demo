@@ -11,17 +11,16 @@ import javax.inject.Inject;
 @Slf4j
 public class GreetingController {
 
-//    @Value("${custom.property-name}")
+    //@Value("${custom.property-name}")
     @Inject
     private PropConfig props;
 
     @GetMapping
     public String greeting() {
-        return new StringBuilder("<h1>Hello!!</h1>")
-                .append("<a href=/login>Login</a>")
-                .append("<br><br>")
-                .append("<a href=/perform_logout>Logout</a>")
-                .toString();
+        return "<h1>Hello!!</h1>" +
+                "<a href=/login>Login</a>" +
+                "<br><br>" +
+                "<a href=/perform_logout>Logout</a>";
     }
 
     @GetMapping("/value")
