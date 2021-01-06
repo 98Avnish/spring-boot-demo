@@ -1,4 +1,4 @@
 package com.example.demo.aspects;
 
-public @interface Log {
+public @interface AspectLog {
 }

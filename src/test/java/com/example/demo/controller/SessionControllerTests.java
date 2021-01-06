@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,14 +31,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SessionControllerTests {
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private SessionService service;
 
-    private static String asJsonString(final Object object) {
+    private String asJsonString(final Object object) {
         try {
-            return new ObjectMapper().writeValueAsString(object);
+            return objectMapper.writeValueAsString(object);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -58,6 +61,8 @@ class SessionControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.description").value(session.getDescription()));
+
+        verify(service, times(1)).getSession(anyLong());
     }
 
     @Test

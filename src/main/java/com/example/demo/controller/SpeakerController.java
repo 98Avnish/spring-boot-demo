@@ -4,7 +4,6 @@ import com.example.demo.model.Speaker;
 import com.example.demo.service.SpeakerService;
 import com.example.demo.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,63 +17,89 @@ import java.util.List;
 @Slf4j
 public class SpeakerController {
 
-    @Autowired
-    private SpeakerService speakerService;
+    private final SpeakerService speakerService;
+    private final Utils utils;
 
-    @Autowired
-    private Utils utils;
+    public SpeakerController(SpeakerService speakerService, Utils utils) {
+        this.speakerService = speakerService;
+        this.utils = utils;
+    }
 
     @GetMapping
-    public List<Speaker> getSpeakers() {
-        return speakerService.getAllSpeakers();
+    public ResponseEntity<List<Speaker>> getSpeakers() {
+        ResponseEntity<List<Speaker>> response;
+        try {
+            List<Speaker> speakers = speakerService.getAllSpeakers();
+            response = ResponseEntity.ok().body(speakers);
+        } catch (Exception e) {
+            log.error("EXCEPTION - Getting All Speakers");
+            response = ResponseEntity.badRequest().build();
+        }
+        return response;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Speaker> getSpeaker(@PathVariable("id") Long id) {
-        return speakerService.getSpeaker(id).map(speaker -> {
-            log.info("Found Speaker :{}", speaker);
-            return ResponseEntity
-                    .ok()
-                    .body(speaker);
-        }).orElse(ResponseEntity.notFound().build());
+        ResponseEntity<Speaker> response;
+        try {
+            Speaker speaker = speakerService.getSpeaker(id);
+            response = ResponseEntity.ok().body(speaker);
+        } catch (Exception e ) {
+            log.error("EXCEPTION - Speaker Not Found :{}", id);
+            response = ResponseEntity.badRequest().build();
+        }
+        return response;
     }
 
     @PostMapping
     public ResponseEntity<Speaker> addSpeakers(@Valid @RequestBody Speaker speaker,
                                                BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+        ResponseEntity<Speaker> response;
+        if (!bindingResult.hasErrors()) {
+            try {
+                Speaker sp = speakerService.addSpeaker(speaker);
+                response = ResponseEntity.ok().body(sp);
+            } catch (Exception e) {
+                log.error("EXCEPTION - Saving Speaker :{}", speaker);
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+        } else {
             utils.logBindingError(bindingResult);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        speakerService.addSpeaker(speaker);
-        return speakerService.getSpeaker(speaker.getId()).map(sp ->
-                ResponseEntity
-                        .ok()
-                        .body(sp)
-        ).orElse(ResponseEntity.notFound().build());
+        return response;
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Speaker> updateSpeaker(@PathVariable("id") Long id,
                                                  @Valid @RequestBody Speaker speaker,
                                                  BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+        ResponseEntity<Speaker> response;
+        if (!bindingResult.hasErrors()) {
+            try {
+                Speaker sp = speakerService.updateSpeaker(speaker);
+                response = ResponseEntity.ok().body(sp);
+            } catch (Exception e) {
+                log.error("EXCEPTION - Updating Speaker :{}", speaker);
+                response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+        } else {
             utils.logBindingError(bindingResult);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return speakerService.getSpeaker(id).map(s -> {
-            Speaker updatedSpeaker = speakerService.updateSpeaker(speaker);
-            return ResponseEntity
-                    .ok()
-                    .body(updatedSpeaker);
-        }).orElse(ResponseEntity.notFound().build());
+        return response;
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteSpeaker(@PathVariable("id") Long id) {
-        return speakerService.getSpeaker(id).map(s -> {
+        ResponseEntity<Boolean> response;
+        try {
             speakerService.deleteSpeaker(id);
-            return ResponseEntity.ok(true);
-        }).orElse(ResponseEntity.notFound().build());
+            response = ResponseEntity.ok().body(true);
+        } catch (Exception e) {
+            log.error("EXCEPTION - Deleting Speaker :{}", id);
+            response = ResponseEntity.badRequest().build();
+        }
+        return response;
     }
 }

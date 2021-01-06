@@ -10,7 +10,7 @@ public class Utils {
 
     public void logBindingError(BindingResult bindingResult) {
         bindingResult.getFieldErrors().forEach(fieldError ->
-                log.info("Validation Error :{} {}",
+                log.error("Validation Error :{} {}",
                         fieldError.getField(),
                         fieldError.getDefaultMessage()));
     }

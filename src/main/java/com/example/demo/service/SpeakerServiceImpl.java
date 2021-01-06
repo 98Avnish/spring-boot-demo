@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.model.Speaker;
 import com.example.demo.repo.SpeakerRepo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -15,25 +15,28 @@ import java.util.Optional;
 @Slf4j
 public class SpeakerServiceImpl implements SpeakerService {
 
-    @Autowired
-    private SpeakerRepo repo;
+    private final SpeakerRepo repo;
 
-    @PostConstruct
-    private void addData() {
-        repo.saveAll(Arrays.asList(
-                new Speaker("Robert", "1"),
-                new Speaker("Brian", "2"),
-                new Speaker("Charles", "3")
-        ));
+    public SpeakerServiceImpl(SpeakerRepo repo) {
+        this.repo = repo;
     }
 
     @Override
-    public Optional<Speaker> getSpeaker(Long id) {
-        return repo.findById(id);
+    public Speaker getSpeaker(Long id) {
+        log.info("Getting Speaker :{}", id);
+        Optional<Speaker> speaker = repo.findById(id);
+        if (speaker.isPresent()) {
+            return speaker.get();
+        } else {
+            log.error("ERROR - Speaker Not Found :{}", id);
+            throw new NotFoundException("Speaker Not Found");
+        }
     }
 
+    //TODO: Add caching
     @Override
     public List<Speaker> getAllSpeakers() {
+        log.info("Getting all Speakers");
         return repo.findAll();
     }
 
@@ -45,7 +48,8 @@ public class SpeakerServiceImpl implements SpeakerService {
 
     @Override
     public Speaker updateSpeaker(Speaker speaker) {
-        log.info("Updating Speaker :{}", speaker);
+        Speaker old = getSpeaker(speaker.getId());
+        log.info("Updating Speaker(found) :{}", old);
         return repo.saveAndFlush(speaker);
     }
 

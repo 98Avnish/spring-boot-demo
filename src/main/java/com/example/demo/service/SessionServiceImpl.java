@@ -1,10 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.aspects.AspectLog;
 import com.example.demo.model.Session;
 import com.example.demo.repo.SessionRepo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -18,31 +17,21 @@ public class SessionServiceImpl implements SessionService {
 
     private SessionRepo repo;
 
-    @Autowired
     public SessionServiceImpl(SessionRepo sessionRepo) {
         log.info("SessionServiceImpl constructor");
         this.repo = sessionRepo;
     }
 
-    @PostConstruct
-    private void addData() {
-        repo.saveAll(Arrays.asList(
-                new Session("Session 1"),
-                new Session("Session 2"),
-                new Session("Session 3")
-        ));
-    }
-
     @Override
+    @AspectLog
     public Optional<Session> getSession(Long id) {
-        log.info("Getting Session by id :{}", id);
+        log.info("Getting Session :{}", id);
         return repo.findById(id);
     }
 
     @Override
-    @Cacheable("sessions")
     public List<Session> getAllSessions() {
-        log.info("Getting All Sessions");
+        log.info("Getting all Sessions");
         return repo.findAll();
     }
 

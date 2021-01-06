@@ -15,22 +15,22 @@ public class SessionLoggingAspect {
 
     @Before("execution(* *.getSession(..))")
     public void before() {
-        log.info("BEFORE: GetSession method called.");
+        log.info("ASPECT BEFORE: GetSession method called.");
     }
 
     @After("execution(* *.getSession(..))")
     public void after() {
-        log.info("AFTER: GetSession method executed.");
+        log.info("ASPECT AFTER: GetSession method executed.");
     }
 
     @Around("execution(* *.getSession(..))")
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
         Object[] methodArgs = joinPoint.getArgs();
-        log.info("AROUND: {} called with id: {}", methodName, methodArgs[0]);
+        log.info("ASPECT AROUND: {} called with id: {}", methodName, methodArgs[0]);
 
         Object res = joinPoint.proceed();
-        log.info("AROUND: {} returned {}", methodName, res);
+        log.info("ASPECT AROUND: {} returned {}", methodName, res);
         return res;
     }
 }

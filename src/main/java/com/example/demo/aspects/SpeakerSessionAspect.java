@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpeakerSessionAspect {
 
-    @Around("@annotation(com.example.demo.aspects.Log)")
+    @Around("@annotation(com.example.demo.aspects.AspectLog)")
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
         Object[] methodArgs = joinPoint.getArgs();
-        log.info("AROUND: {} called with id: {}", methodName, methodArgs[0]);
+        log.info("@Log: {} called with id: {}", methodName, methodArgs[0]);
 
         Object res = joinPoint.proceed();
-        log.info("AROUND: {} returned {}", methodName, res);
+        log.info("@Log: {} returned {}", methodName, res);
         return res;
     }
 

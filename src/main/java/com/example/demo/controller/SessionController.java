@@ -17,7 +17,6 @@ import java.util.List;
 public class SessionController {
 
     private final SessionService sessionService;
-
     private final Utils utils;
 
     public SessionController(SessionService sessionService, Utils utils) {
@@ -26,7 +25,7 @@ public class SessionController {
     }
 
     @GetMapping
-    public List<Session> getSessions() {
+    public List<Session> getAllSessions() {
         return sessionService.getAllSessions();
     }
 
