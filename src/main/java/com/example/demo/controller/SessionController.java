@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.model.Session;
 import com.example.demo.service.SessionService;
 import com.example.demo.utils.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
